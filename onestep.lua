@@ -88,9 +88,9 @@ if result1 ~= 0 then
   os.exit(1)
 end
 
--- 步骤2: 使用 convert_to_module_simple.lua 转换为模块
+-- 步骤2: 使用 convert_to_module_autoexec.lua 转换为模块
 print("\n步骤2: 转换为模块...")
-local cmd2 = string.format('lua convert_to_module_simple.lua "%s" "%s" "%s"', c_file, module_c_file, module_name)
+local cmd2 = string.format('lua convert_to_module_autoexec.lua "%s" "%s" "%s"', c_file, module_c_file, module_name)
 print("执行命令: " .. cmd2)
 local result2 = os.execute(cmd2)
 if result2 ~= 0 then
