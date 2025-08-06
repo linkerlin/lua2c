@@ -43,7 +43,7 @@ local require      = _G.require
 local string       = _G.string
 local table        = _G.table
 
--- package.path = './lib/?.lua;' .. package.path
+package.path = './lib/?.lua;' .. package.path
 
 -- note: includes gg/mlp Lua parsing Libraries taken from Metalua.
 require "lexer"
@@ -78,13 +78,15 @@ local function string_to_ast(src)
   local  ast = mlp.chunk (lx)
   return ast
 end
-
 local src_filename = ...
 
 if not src_filename then
   io.stderr:write("usage: lua2c filename.lua\n")
   os.exit(1)
 end
+
+-- Generate output filename by replacing .lua extension with .c
+local output_filename = src_filename:gsub("%.lua$", "") .. ".c"
 
 local src_file = assert(io.open (src_filename, 'r'))
 local src = src_file:read '*a'; src_file:close()
@@ -95,5 +97,12 @@ local ast = string_to_ast(src)
 local cast = A2C.ast_to_cast(src, ast)
 -- DEBUG(cast)
 
-io.stdout:write(C2S.cast_to_string(cast))
+-- Write output to file instead of stdout
+local output_file = assert(io.open(output_filename, 'w'))
+output_file:write(C2S.cast_to_string(cast))
+output_file:close()
+
+-- Print a message to stdout to indicate success
+io.stdout:write("Generated " .. output_filename .. "\n")
+
 
